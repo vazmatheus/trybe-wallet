@@ -1,4 +1,8 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import fetchApi from '../services/fetch';
+import { addExpenseAsync } from '../store/actions';
 
 class FormAddExpenses extends Component {
   constructor() {
@@ -9,16 +13,42 @@ class FormAddExpenses extends Component {
       currency: '',
       method: '',
       tag: '',
+      coins: [],
     };
   }
 
-  handleChange({ target }) {
+  componentDidMount() {
+    this.requestApi();
+  }
+
+  handleChange = ({ target }) => {
     const { name, value } = target;
     this.setState({ [name]: value });
   }
 
-  render() {
+  requestApi = async () => {
+    const coins = await fetchApi();
+    this.setState({
+      coins: Object.keys(coins).filter((coin) => coin !== 'USDT'),
+    });
+  }
+
+  handleClick = async () => {
+    const { addExpense } = this.props;
     const { value, description, currency, method, tag } = this.state;
+
+    addExpense({
+      value,
+      description,
+      currency,
+      method,
+      tag,
+    });
+    this.setState({ value: '', description: '' });
+  }
+
+  render() {
+    const { value, description, currency, method, tag, coins } = this.state;
     return (
       <div>
         <form>
@@ -53,7 +83,9 @@ class FormAddExpenses extends Component {
               data-testid="currency-input"
               onChange={ this.handleChange }
             >
-              EUR
+              {coins.map((coin) => (
+                <option key={ coin } data-testid={ coin } value={ coin }>{coin}</option>
+              ))}
             </select>
           </label>
           <label htmlFor="method">
@@ -71,7 +103,7 @@ class FormAddExpenses extends Component {
             </select>
           </label>
           <label htmlFor="tag">
-            Categoria - tag:
+            Categoria:
             <select
               name="tag"
               value={ tag }
@@ -86,11 +118,19 @@ class FormAddExpenses extends Component {
               <option value="Saúde">Saúde</option>
             </select>
           </label>
-          <button type="button">Adicionar despesa</button>
+          <button type="button" onClick={ this.handleClick }>Adicionar despesa</button>
         </form>
       </div>
     );
   }
 }
 
-export default FormAddExpenses;
+FormAddExpenses.propTypes = {
+  addExpense: PropTypes.func,
+}.isRequired;
+
+const mapDispatchToProps = (dispatch) => ({
+  addExpense: (payload) => dispatch(addExpenseAsync(payload)),
+});
+
+export default connect(null, mapDispatchToProps)(FormAddExpenses);

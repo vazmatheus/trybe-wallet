@@ -1,6 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import { setUserEmail } from '../store/actions';
 
 class Login extends React.Component {
@@ -28,33 +34,43 @@ class Login extends React.Component {
     });
   }
 
-  handleClick = () => {
+  handleSubmit = (e) => {
+    e.preventDefault();
     const { setEmail, history } = this.props;
     const { email } = this.state;
     setEmail(email);
-    history.push('/carteira');
+    history.push('/wallet');
   };
 
   render() {
     const { email, password, btnDisabled } = this.state;
     return (
-      <div>
-        Login
-        <form>
-          <label htmlFor="email">
-            E-mail
-            <input
+      <React.Fragment>
+        <CssBaseline />
+        <Container maxWidth="sm">
+          <Box
+            component="form"
+            onSubmit={ this.handleSubmit }
+            sx={ {
+              '& > :not(style)': { m: 1, width: '25ch' },
+            } }
+            noValidate
+            autoComplete="off"
+          >
+            <TextField
+              label="Email"
+              variant="standard"
               type="email"
               id="email"
               name="email"
               value={ email }
               data-testid="email-input"
+              placeholder="user@example.com"
               onChange={ this.handleChange }
             />
-          </label>
-          <label htmlFor="password">
-            Senha
-            <input
+            <TextField
+              label="Password"
+              variant="standard"
               type="password"
               id="password"
               name="password"
@@ -62,16 +78,18 @@ class Login extends React.Component {
               data-testid="password-input"
               onChange={ this.handleChange }
             />
-          </label>
-          <button
-            type="button"
-            disabled={ btnDisabled }
-            onClick={ this.handleClick }
-          >
-            Entrar
-          </button>
-        </form>
-      </div>
+            <Stack spacing={ 2 } direction="row">
+              <Button
+                variant="contained"
+                type="submit"
+                disabled={ btnDisabled }
+              >
+                Login
+              </Button>
+            </Stack>
+          </Box>
+        </Container>
+      </React.Fragment>
     );
   }
 }

@@ -1,16 +1,15 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 
 class Header extends Component {
   render() {
     const { email, expenses } = this.props;
-
-    // let total = 0;
-    // for (let i = 0; i < expenses.length; i++) {
-    //   const expense = expenses[i]
-    //   total += parseFloat(expense.value) * parseFloat(expense.exchangeRates[expense.currency].ask)
-    // }
+    console.log(expenses);
     const total = expenses.reduce(
       (acc, expense) => acc + parseFloat(expense.value)
         * parseFloat(expense.exchangeRates[expense.currency].ask),
@@ -18,14 +17,21 @@ class Header extends Component {
     );
 
     return (
-      <div>
-        <h3>Trybe Wallet</h3>
-        <section>
-          <p data-testid="email-field">{ email }</p>
-          <p data-testid="total-field">{ total }</p>
-          <p data-testid="header-currency-field">BRL</p>
-        </section>
-      </div>
+      <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Trybe Wallet
+          </Typography>
+          <Typography variant="h8" component="div" sx={{ flexGrow: 1 }}>
+            E-mail: { email }
+          </Typography>
+          <Typography variant="h8" component="div" sx={{ flexGrow: 1 }}>
+            Total expense: R$ { total.toFixed(2) }
+          </Typography>
+        </Toolbar>
+      </AppBar>
+    </Box>
     );
   }
 }

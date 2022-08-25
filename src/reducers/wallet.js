@@ -1,4 +1,4 @@
-// Esse reducer será responsável por tratar o todas as informações relacionadas as despesas
+// This reducer will be responsible for handling all information related to expenses
 import { SET_EXPENSES } from '../store/actions';
 
 const INITIAL_STATE = {

@@ -1,58 +1,58 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 class ExpensesTable extends Component {
   render() {
     const { expenses } = this.props;
     return (
-      <table>
-        <thead>
-          <tr>
-            <th>Descrição</th>
-            <th>Tag</th>
-            <th>Método de pagamento</th>
-            <th>Valor</th>
-            <th>Moeda</th>
-            <th>Câmbio utilizado</th>
-            <th>Valor convertido</th>
-            <th>Moeda de conversão</th>
-            <th>Editar/Excluir</th>
-          </tr>
-        </thead>
-        <tbody>
-          {expenses.map((expense) => {
+      <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Description</TableCell>
+            <TableCell>Tag</TableCell>
+            <TableCell>Payment method</TableCell>
+            <TableCell>Value</TableCell>
+            <TableCell>Currency</TableCell>
+            <TableCell>Exchange used</TableCell>
+            <TableCell>Converted value</TableCell>
+            <TableCell>Conversion currency</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+        {expenses.map((expense) => {
             const value = parseFloat(expense.value);
             const ask = parseFloat(expense.exchangeRates[expense.currency].ask);
-
             return (
-              <tr key={ expense.id }>
-                <td>{expense.description}</td>
-                <td>{expense.tag}</td>
-                <td>{expense.method}</td>
-                <td>{value.toFixed(2)}</td>
-                <td>Real</td>
-                <td>{ask.toFixed(2)}</td>
-                <td>{ask * value}</td>
-                <td>{expense.exchangeRates[expense.currency].name}</td>
-                <td>...</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            <TableRow
+              key={expense.id}
+              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            >
+              <TableCell>{expense.description}</TableCell>
+              <TableCell>{expense.tag}</TableCell>
+              <TableCell>{expense.method}</TableCell>
+              <TableCell>R$ {value.toFixed(2)}</TableCell>
+              <TableCell>Real</TableCell>
+              <TableCell>R$ {ask.toFixed(2)}</TableCell>
+              <TableCell>R$ {(ask * value).toFixed(2)}</TableCell>
+              <TableCell>{expense.exchangeRates[expense.currency].name}</TableCell>
+
+            </TableRow>
+            )})}
+        </TableBody>
+      </Table>
+    </TableContainer>
     );
   }
 }
-
-/**
- * value(pin):"23"
-description(pin):"Test"
-currency(pin):"CAD"
-method(pin):"Cartão de crédito"
-tag(pin):"Lazer"
-id(pin):0
- */
 
 const mapStateToProps = (state) => ({
   expenses: state.wallet.expenses,

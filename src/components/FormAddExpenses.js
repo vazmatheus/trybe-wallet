@@ -3,16 +3,23 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import fetchApi from '../services/fetch';
 import { addExpenseAsync } from '../store/actions';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import Button from '@mui/material/Button';
 
 class FormAddExpenses extends Component {
   constructor() {
     super();
     this.state = {
-      value: '',
+      value: 0,
       description: '',
-      currency: '',
-      method: '',
-      tag: '',
+      currency: 'USD',
+      method: 'Cash',
+      tag: 'Food',
       coins: [],
     };
   }
@@ -50,77 +57,82 @@ class FormAddExpenses extends Component {
   render() {
     const { value, description, currency, method, tag, coins } = this.state;
     return (
-      <div>
-        <form>
-          <label htmlFor="value">
-            Valor da despesa:
-            <input
-              type="number"
-              name="value"
-              value={ value }
-              id="value"
-              data-testid="value-input"
-              onChange={ this.handleChange }
-            />
-          </label>
-          <label htmlFor="description">
-            Descrição da despesa:
-            <input
-              type="text"
-              name="description"
-              value={ description }
-              id="description"
-              data-testid="description-input"
-              onChange={ this.handleChange }
-            />
-          </label>
-          <label htmlFor="currency">
-            Moeda:
-            <select
-              name="currency"
-              value={ currency }
-              id="currency"
-              data-testid="currency-input"
-              onChange={ this.handleChange }
-            >
-              {coins.map((coin) => (
-                <option key={ coin } data-testid={ coin } value={ coin }>{coin}</option>
-              ))}
-            </select>
-          </label>
-          <label htmlFor="method">
-            Método de pagamento:
-            <select
-              name="method"
-              value={ method }
-              id="method"
-              data-testid="method-input"
-              onChange={ this.handleChange }
-            >
-              <option value="Dinheiro">Dinheiro</option>
-              <option value="Cartão de crédito">Cartão de crédito</option>
-              <option value="Cartão de débito">Cartão de débito</option>
-            </select>
-          </label>
-          <label htmlFor="tag">
-            Categoria:
-            <select
-              name="tag"
-              value={ tag }
-              id="tag"
-              data-testid="tag-input"
-              onChange={ this.handleChange }
-            >
-              <option value="Alimentação">Alimentação</option>
-              <option value="Lazer">Lazer</option>
-              <option value="Trabalho">Trabalho</option>
-              <option value="Transporte">Transporte</option>
-              <option value="Saúde">Saúde</option>
-            </select>
-          </label>
-          <button type="button" onClick={ this.handleClick }>Adicionar despesa</button>
-        </form>
-      </div>
+      <Box
+        component="form"
+        sx={{
+          '& > :not(style)': { m: 1, width: '25ch' },
+        }}
+        noValidate
+        autoComplete="off"
+      >
+        <TextField
+          id="value"
+          label="Expense value"
+          type="number"
+          name="value"
+          value={ value }
+          onChange={ this.handleChange }
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+        <TextField
+          id="description"
+          label="Description of expense"
+          variant="outlined"
+          name="description"
+          value={ description }
+          onChange={ this.handleChange }
+        />
+        <FormControl fullWidth>
+          <InputLabel id="currency">Currency</InputLabel>
+          <Select
+            labelId="currency"
+            id="currency"
+            value={currency}
+            label="currency"
+            name="currency"
+            onChange={this.handleChange}
+          >
+            {coins.map((coin) => (
+              <MenuItem key={ coin } value={ coin }>{coin}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl fullWidth>
+          <InputLabel id="method">Method</InputLabel>
+          <Select
+            labelId="method"
+            id="method"
+            value={method}
+            label="method"
+            name="method"
+            onChange={this.handleChange}
+          >
+            <MenuItem value="Cash">Cash</MenuItem>
+            <MenuItem value="Credit card">Credit card</MenuItem>
+            <MenuItem value="Debit card">Debit card</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl fullWidth>
+          <InputLabel id="dtag">Category</InputLabel>
+          <Select
+            labelId="tag"
+            id="tag"
+            value={tag}
+            label="Category"
+            name="tag"
+            onChange={this.handleChange}
+          >
+            <MenuItem value="Food">Food</MenuItem>
+            <MenuItem value="Leisure">Leisure</MenuItem>
+            <MenuItem value="Work">Work</MenuItem>
+            <MenuItem value="Transport">Transport</MenuItem>
+            <MenuItem value="Health">Health</MenuItem>
+          </Select>
+        </FormControl>
+        <Button variant="contained" onClick={ this.handleClick }>Add expense</Button>
+      </Box>
     );
   }
 }
